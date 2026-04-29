@@ -14,6 +14,7 @@ report_count_user = {}
 report_count_channel = {}
 stop_mass_report = {}
 
+# РАЗНЫЕ ТЕКСТЫ ЖАЛОБ С МАТОМ
 REPORT_TEXTS = [
     "CSAM and child exploitation material",
     "Terrorist propaganda and calls for violence",
@@ -22,7 +23,15 @@ REPORT_TEXTS = [
     "Harassment and doxxing of minors"
 ]
 
-# ========== ФУНКЦИЯ ПРОВЕРКИ СТАТУСА ==========
+# МАТ ЮЗЕРУ ПРИ РЕЗУЛЬТАТАХ
+INSULTS = [
+    "ебанутые ублюдки",
+    "гниды конченые",
+    "пиздюки долбаные",
+    "уебаны",
+    "твари ебучие"
+]
+
 def check_target_status(target):
     try:
         if target.startswith("https://t.me/"):
@@ -51,7 +60,6 @@ def check_target_status(target):
         return "error"
     return "alive"
 
-# ========== ОСНОВНЫЕ ФУНКЦИИ ==========
 def get_updates(offset=None):
     url = URL + "getUpdates"
     params = {"timeout": 100, "offset": offset}
@@ -129,18 +137,18 @@ def mass_report_worker(chat_id, target, count, is_channel):
         sent = 0
         for i in range(count):
             if stop_mass_report.get(chat_id, False):
-                send_message(chat_id, f"⏹️ Остановлено. Отправлено: {sent}")
+                send_message(chat_id, f"⏹️ Остановлено нахуй. Отправлено: {sent}")
                 break
             success = send_report(target, is_channel=True)
             percent = int((i+1) / count * 100)
             if success:
                 sent += 1
                 report_count_channel[chat_id] = report_count_channel.get(chat_id, 0) + 1
-                send_message(chat_id, f"💀 [{percent}%] Жалоба {i+1}/{count} на канал {target} | отправлено {sent}")
+                send_message(chat_id, f"💀 [{percent}%] Жалоба {i+1}/{count} на канал {target} | отправлено {sent} хуев")
             else:
-                send_message(chat_id, f"❌ [{percent}%] Ошибка: жалоба {i+1}/{count} на канал {target}")
+                send_message(chat_id, f"❌ [{percent}%] Ошибка пизда: жалоба {i+1}/{count} на канал {target} не ушла")
             time.sleep(random.uniform(20, 90))
-        send_message(chat_id, f"📊 Судный день завершён. Отправлено: {sent} жалоб на канал {target}")
+        send_message(chat_id, f"📊 Судный день завершён нахуй. Отправлено: {sent} жалоб на канал {target}")
     else:
         sent = 0
         for i in range(count):
@@ -152,16 +160,16 @@ def mass_report_worker(chat_id, target, count, is_channel):
             if success:
                 sent += 1
                 report_count_user[chat_id] = report_count_user.get(chat_id, 0) + 1
-                send_message(chat_id, f"💀 [{percent}%] Жалоба {i+1}/{count} на @{target} | отправлено {sent}")
+                send_message(chat_id, f"💀 [{percent}%] Жалоба {i+1}/{count} на @{target} | отправлено {sent} хуев")
             else:
-                send_message(chat_id, f"❌ [{percent}%] Ошибка: жалоба {i+1}/{count} на @{target}")
+                send_message(chat_id, f"❌ [{percent}%] Ошибка пизда: жалоба {i+1}/{count} на @{target}")
             time.sleep(random.uniform(20, 90))
         send_message(chat_id, f"📊 Судный день завершён. Отправлено: {sent} жалоб на @{target}")
     
     mass_report_active[chat_id] = False
     stop_mass_report[chat_id] = False
 
-print("🔥 Бот «Судный день» запущен.")
+print("Бот нахуй запущен.")
 
 last_id = 0
 while True:
@@ -178,7 +186,7 @@ while True:
                 text = update["message"]["text"].strip()
                 
                 if text in ["/help", "/start"]:
-                    send_message(chat_id, "⚡ Команды:\n/report — одна жалоба\n/massreport — массовые 5-50\n/doomsday — СУДНЫЙ ДЕНЬ 10-100\n/check — проверить статус\n/status — статистика\n/stop — остановить")
+                    send_message(chat_id, "⚡ Пиздуй по командам:\n/report — одна жалоба\n/massreport — массовые 5-50\n/doomsday — СУДНЫЙ ДЕНЬ 10-100\n/check — проверить, снесло ли цель нахуй\n/status — статистика\n/stop — остановить хуйню")
                 
                 elif text == "/report":
                     waiting_for_username[chat_id] = "single"
@@ -186,15 +194,15 @@ while True:
                 
                 elif text == "/massreport":
                     waiting_for_username[chat_id] = "mass"
-                    send_message(chat_id, "📢 Введи цель\nЗатем количество (5-50)")
+                    send_message(chat_id, "📢 Введи цель для атаки, потом количество (5-50)")
                 
                 elif text == "/doomsday":
                     waiting_for_username[chat_id] = "doomsday"
-                    send_message(chat_id, "💀 СУДНЫЙ ДЕНЬ\nВведи цель (@username или ссылка)")
+                    send_message(chat_id, "💀 СУДНЫЙ ДЕНЬ НАХУЙ\nВведи цель (@username или ссылка)")
                 
                 elif text == "/check":
                     waiting_for_username[chat_id] = "check_target"
-                    send_message(chat_id, "🔍 Введи цель для проверки")
+                    send_message(chat_id, "🔍 Введи цель для проверки (чекаем, снесло ли её нахуй)")
                 
                 elif text == "/status":
                     user_count = report_count_user.get(chat_id, 0)
@@ -204,11 +212,10 @@ while True:
                 elif text == "/stop":
                     if mass_report_active.get(chat_id, False):
                         stop_mass_report[chat_id] = True
-                        send_message(chat_id, "⏹️ Останавливаю...")
+                        send_message(chat_id, "⏹️ Останавливаю нахуй...")
                     else:
                         send_message(chat_id, "⚠️ Нет активной атаки")
                 
-                # --- ОБРАБОТКА ВВОДА ---
                 elif waiting_for_username.get(chat_id) == "single":
                     username, is_channel = extract_username(text)
                     target_type = "канал" if is_channel else "юзера"
@@ -265,7 +272,7 @@ while True:
                                 username, is_channel = extract_username(target_raw)
                                 target_type = "канал" if is_channel else "юзера"
                                 mass_report_active[chat_id] = True
-                                send_message(chat_id, f"💀💀💀 СУДНЫЙ ДЕНЬ 💀💀💀\n{count} жалоб на {target_type} {username}")
+                                send_message(chat_id, f"💀💀💀 СУДНЫЙ ДЕНЬ НАХУЙ 💀💀💀\n{count} жалоб на {target_type} {username}")
                                 thread = threading.Thread(target=mass_report_worker, args=(chat_id, username, count, is_channel))
                                 thread.start()
                         else:
@@ -279,13 +286,14 @@ while True:
                     status = check_target_status(username)
                     
                     if status == "dead":
-                        msg = f"💀💀💀 СНЕСЕН НАХУЙ! 💀💀💀\n{username} полностью удалён или заблокирован."
+                        insult = random.choice(INSULTS)
+                        msg = f"💀💀💀 СНЕСЕН НАХУЙ, {insult}! 💀💀💀\n{username} полностью удалён или заблокирован."
                     elif status == "private":
-                        msg = f"⚠️ ЦЕЛЬ СКРЫТА! {username} стал приватным. Нужно повторить атаку."
+                        msg = f"⚠️ ЦЕЛЬ СКРЫТА! {username} стал приватным. Повтори атаку."
                     elif status == "alive":
-                        msg = f"🟢 ЦЕЛЬ ЖИВА. {username} всё ещё доступен."
+                        msg = f"🟢 ЦЕЛЬ ЖИВА, ЖИВУЧАЯ СУКА. {username} ещё существует."
                     else:
-                        msg = f"❌ Не удалось проверить {username}. Ошибка."
+                        msg = f"❌ Не удалось проверить {username}. Ошибка связи."
                     
                     send_message(chat_id, msg)
                     waiting_for_username[chat_id] = None
